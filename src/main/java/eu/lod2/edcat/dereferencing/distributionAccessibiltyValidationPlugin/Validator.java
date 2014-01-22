@@ -2,6 +2,7 @@ package eu.lod2.edcat.dereferencing.distributionAccessibiltyValidationPlugin;
 
 import eu.lod2.edcat.utils.QueryResult;
 import eu.lod2.edcat.utils.SparqlEngine;
+import eu.lod2.query.Sparql;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.slf4j.LoggerFactory;
@@ -47,14 +48,16 @@ public class Validator {
    */
   private static Map<URI, URL> retrieveDistributions( URI datasetURI, SparqlEngine engine ) {
     // fetch distribution_uri <-> distribution_download_url
-    String query = "" +
-      Constants.SPARQL_PREFIXES +
-      "SELECT ?distribution , ?url \n" +
-      "FROM <" + datasetURI.stringValue() + "> \n" +
-      "WHERE { \n" +
-      "  <" + datasetURI.stringValue() + "> edcat:Dataset ?distribution. \n" +
-      "  ?distribution edcat:downloadURL ?url. \n" +
-      "}";
+    String query = Sparql.query( "" +
+      " @PREFIX " +
+      " SELECT ?url " +
+      " FROM $dataset" +
+      " WHERE {" +
+      "  $dataset edcat:Dataset ?distribution." +
+      "  ?distribution edcat:downloadURL ?url." +
+      " }",
+      "dataset", datasetURI );
+
     QueryResult sparqlResults = engine.sparqlSelect( query );
 
     // translate the results for a nicer interface
