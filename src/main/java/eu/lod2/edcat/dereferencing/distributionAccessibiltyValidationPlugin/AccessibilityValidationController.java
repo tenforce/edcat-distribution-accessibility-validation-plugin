@@ -31,7 +31,7 @@ public class AccessibilityValidationController {
   @RequestMapping( value = "datasets/{datasetId}/validate-accessibility", method = RequestMethod.GET, produces = "application/json;charset=UTF-8" )
   public ResponseEntity<Object> update( @PathVariable String datasetId ) throws Throwable {
     SparqlEngine engine = new SparqlEngine();
-    Catalog catalog = new Catalog( engine, eu.lod2.edcat.utils.Constants.getURIBase() );
+    Catalog catalog = Catalog.getDefaultCatalog( engine );
     URI datasetUri = catalog.generateDatasetUri( datasetId );
 
     HookManager.callHook( BeforeAccessibilityValidationHookHandler.class,
