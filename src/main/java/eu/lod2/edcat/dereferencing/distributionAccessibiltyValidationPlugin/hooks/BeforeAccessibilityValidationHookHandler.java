@@ -2,7 +2,7 @@ package eu.lod2.edcat.dereferencing.distributionAccessibiltyValidationPlugin.hoo
 
 import eu.lod2.edcat.dereferencing.distributionAccessibiltyValidationPlugin.contexts.BeforeAccessibilityValidationContext;
 import eu.lod2.hooks.handlers.HookHandler;
-import eu.lod2.hooks.util.ActionAbortException;
+import eu.lod2.hooks.handlers.dcat.ActionAbortException;
 
 /**
  * Hook which is called before the accessibility of a Dataset is verified.
