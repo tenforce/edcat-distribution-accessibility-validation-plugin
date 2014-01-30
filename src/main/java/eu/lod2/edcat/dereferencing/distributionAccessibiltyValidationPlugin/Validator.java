@@ -50,11 +50,11 @@ public class Validator {
     // fetch distribution_uri <-> distribution_download_url
     String query = Sparql.query( "" +
       " @PREFIX " +
-      " SELECT ?url " +
+      " SELECT ?distribution ?accessURL " +
       " FROM $dataset" +
       " WHERE {" +
-      "  $dataset edcat:Dataset ?distribution." +
-      "  ?distribution edcat:downloadURL ?url." +
+      "  $dataset dcat:distribution ?distribution." +
+      "  ?distribution dcat:accessURL ?accessURL." +
       " }",
       "dataset", datasetURI );
 
@@ -65,9 +65,9 @@ public class Validator {
 
     for ( Map<String, String> result : sparqlResults )
       try {
-        resultMap.put( new URIImpl( result.get( "distribution" ) ), new URL( result.get( "downloadURL" ) ) );
+        resultMap.put( new URIImpl( result.get( "distribution" ) ), new URL( result.get( "accessURL" ) ) );
       } catch ( MalformedURLException e ) {
-        LoggerFactory.getLogger( AccessibilityValidationController.class ).error( "Skipping malformed url " + result.get( "downloadURL" ) );
+        LoggerFactory.getLogger( AccessibilityValidationController.class ).error( "Skipping malformed url " + result.get( "accessURL" ) );
       }
 
     return resultMap;
