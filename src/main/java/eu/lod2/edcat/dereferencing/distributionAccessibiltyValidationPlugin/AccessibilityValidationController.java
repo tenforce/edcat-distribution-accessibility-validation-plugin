@@ -4,7 +4,7 @@ import eu.lod2.edcat.dereferencing.distributionAccessibiltyValidationPlugin.cont
 import eu.lod2.edcat.dereferencing.distributionAccessibiltyValidationPlugin.contexts.BeforeAccessibilityValidationContext;
 import eu.lod2.edcat.dereferencing.distributionAccessibiltyValidationPlugin.hooks.AfterAccessibilityValidationHookHandler;
 import eu.lod2.edcat.dereferencing.distributionAccessibiltyValidationPlugin.hooks.BeforeAccessibilityValidationHookHandler;
-import eu.lod2.edcat.utils.Catalog;
+import eu.lod2.edcat.utils.CatalogService;
 import eu.lod2.edcat.utils.SparqlEngine;
 import eu.lod2.hooks.util.HookManager;
 import org.openrdf.model.URI;
@@ -31,12 +31,12 @@ public class AccessibilityValidationController {
   @RequestMapping( value = "datasets/{datasetId}/validate-accessibility", method = RequestMethod.GET, produces = "application/json;charset=UTF-8" )
   public ResponseEntity<Object> update( @PathVariable String datasetId ) throws Throwable {
     SparqlEngine engine = new SparqlEngine();
-    Catalog catalog = Catalog.getDefaultCatalog( engine );
-    URI datasetUri = catalog.generateDatasetUri( datasetId );
+    CatalogService catalogService = CatalogService.getDefaultCatalog( engine );
+    URI datasetUri = catalogService.generateDatasetUri( datasetId );
 
     HookManager.callHook( BeforeAccessibilityValidationHookHandler.class,
       "handleBeforeAccessibilityValidation",
-      new BeforeAccessibilityValidationContext( engine, catalog ) );
+      new BeforeAccessibilityValidationContext( engine, catalogService ) );
 
     DatasetAccessibility accessibility = Validator.dereferenceDataset( datasetUri, engine );
     Object jsonBody = jsonifyAccessibilities( accessibility );
@@ -45,7 +45,7 @@ public class AccessibilityValidationController {
     HookManager.callHook( AfterAccessibilityValidationHookHandler.class,
       "handleAfterAccessibilityValidation",
       new AfterAccessibilityValidationContext(
-        engine, catalog, response
+        engine, catalogService, response
        ) );
 
     return response;

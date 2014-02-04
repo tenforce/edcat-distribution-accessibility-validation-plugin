@@ -1,6 +1,6 @@
 package eu.lod2.edcat.dereferencing.distributionAccessibiltyValidationPlugin.contexts;
 
-import eu.lod2.edcat.utils.Catalog;
+import eu.lod2.edcat.utils.CatalogService;
 import eu.lod2.edcat.utils.SparqlEngine;
 
 /**
@@ -15,17 +15,17 @@ public class BeforeAccessibilityValidationContext {
    * Simple constructor specifying all accessible values.
    *
    * @param engine Engine which may be used to retrieve more information from the RDF store.
-   * @param catalog Catalog for which the accessibility is to be verified.
+   * @param catalogService CatalogService for which the accessibility is to be verified.
    */
-  public BeforeAccessibilityValidationContext( SparqlEngine engine , Catalog catalog ){
+  public BeforeAccessibilityValidationContext( SparqlEngine engine , CatalogService catalogService ){
     this.engine = engine;
-    this.catalog = catalog;
+    this.catalogService = catalogService;
   }
 
   /** Connection to the RDF store. */
   private SparqlEngine engine;
-  /** Catalog for which the accessibility is to be verified. */
-  private Catalog catalog;
+  /** CatalogService for which the accessibility is to be verified. */
+  private CatalogService catalogService;
 
   /**
    * Retrieves the connection to the RDF store.
@@ -38,13 +38,13 @@ public class BeforeAccessibilityValidationContext {
   }
 
   /**
-   * Retrieves the catalog for which we are verifying the accessibility.
+   * Retrieves the catalogService for which we are verifying the accessibility.
    *
-   * @return Catalog subject to verification.
+   * @return CatalogService subject to verification.
    */
   @SuppressWarnings( "UnusedDeclaration" )
-  public Catalog getCatalog(){
-    return catalog;
+  public CatalogService getCatalogService(){
+    return catalogService;
   }
 
 }

@@ -1,6 +1,6 @@
 package eu.lod2.edcat.dereferencing.distributionAccessibiltyValidationPlugin.contexts;
 
-import eu.lod2.edcat.utils.Catalog;
+import eu.lod2.edcat.utils.CatalogService;
 import eu.lod2.edcat.utils.SparqlEngine;
 import org.springframework.http.ResponseEntity;
 
@@ -16,18 +16,18 @@ public class AfterAccessibilityValidationContext {
    * Simple constructor specifying all accessible values.
    *
    * @param engine Engine which may be used to retrieve more information from the RDF store.
-   * @param catalog Catalog for which the accessibility is to be verified.
+   * @param catalogService CatalogService for which the accessibility is to be verified.
    */
-  public AfterAccessibilityValidationContext( SparqlEngine engine , Catalog catalog , ResponseEntity<Object> response ){
+  public AfterAccessibilityValidationContext( SparqlEngine engine , CatalogService catalogService, ResponseEntity<Object> response ){
     this.engine = engine;
-    this.catalog = catalog;
+    this.catalogService = catalogService;
     this.response = response;
   }
 
   /** Connection to the RDF store. */
   private SparqlEngine engine;
-  /** Catalog for which the accessibility is to be verified. */
-  private Catalog catalog;
+  /** CatalogService for which the accessibility is to be verified. */
+  private CatalogService catalogService;
   /** Response object. */
   private ResponseEntity<Object> response;
 
@@ -42,13 +42,13 @@ public class AfterAccessibilityValidationContext {
   }
 
   /**
-   * Retrieves the catalog for which we are verifying the accessibility.
+   * Retrieves the catalogService for which we are verifying the accessibility.
    *
-   * @return Catalog subject to verification.
+   * @return CatalogService subject to verification.
    */
   @SuppressWarnings( "UnusedDeclaration" )
-  public Catalog getCatalog(){
-    return catalog;
+  public CatalogService getCatalogService(){
+    return catalogService;
   }
 
   /**
