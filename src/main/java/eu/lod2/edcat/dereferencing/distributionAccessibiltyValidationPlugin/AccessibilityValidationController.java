@@ -5,7 +5,6 @@ import eu.lod2.edcat.dereferencing.distributionAccessibiltyValidationPlugin.cont
 import eu.lod2.edcat.dereferencing.distributionAccessibiltyValidationPlugin.hooks.AfterAccessibilityValidationHookHandler;
 import eu.lod2.edcat.dereferencing.distributionAccessibiltyValidationPlugin.hooks.BeforeAccessibilityValidationHookHandler;
 import eu.lod2.edcat.utils.CatalogService;
-import eu.lod2.edcat.utils.SparqlEngine;
 import eu.lod2.hooks.util.HookManager;
 import org.openrdf.model.URI;
 import org.springframework.http.HttpHeaders;
@@ -30,23 +29,20 @@ public class AccessibilityValidationController {
   // GET /datasets/id/validate-accessibility
   @RequestMapping( value = "datasets/{datasetId}/validate-accessibility", method = RequestMethod.GET, produces = "application/json;charset=UTF-8" )
   public ResponseEntity<Object> update( @PathVariable String datasetId ) throws Throwable {
-    SparqlEngine engine = new SparqlEngine();
-    CatalogService catalogService = CatalogService.getDefaultCatalog( engine );
+    CatalogService catalogService = CatalogService.getDefaultCatalog( );
     URI datasetUri = catalogService.generateDatasetUri( datasetId );
 
     HookManager.callHook( BeforeAccessibilityValidationHookHandler.class,
       "handleBeforeAccessibilityValidation",
-      new BeforeAccessibilityValidationContext( engine, catalogService ) );
+      new BeforeAccessibilityValidationContext( catalogService ) );
 
-    DatasetAccessibility accessibility = Validator.dereferenceDataset( datasetUri, engine );
+    DatasetAccessibility accessibility = Validator.dereferenceDataset( datasetUri );
     Object jsonBody = jsonifyAccessibilities( accessibility );
 
     ResponseEntity<Object> response = new ResponseEntity<Object>( jsonBody, new HttpHeaders(), HttpStatus.OK );
     HookManager.callHook( AfterAccessibilityValidationHookHandler.class,
       "handleAfterAccessibilityValidation",
-      new AfterAccessibilityValidationContext(
-        engine, catalogService, response
-       ) );
+      new AfterAccessibilityValidationContext( catalogService, response ) );
 
     return response;
   }

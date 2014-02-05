@@ -1,8 +1,7 @@
 package eu.lod2.edcat.dereferencing.distributionAccessibiltyValidationPlugin;
 
 import eu.lod2.edcat.utils.QueryResult;
-import eu.lod2.edcat.utils.SparqlEngine;
-import eu.lod2.query.Sparql;
+import eu.lod2.query.Db;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.slf4j.LoggerFactory;
@@ -27,10 +26,10 @@ public class Validator {
    * @param datasetURI Identifier for the dataset of which we want to validate the accessibility.
    * @return True iff the dataset could be dereferenced.
    */
-  public static DatasetAccessibility dereferenceDataset( URI datasetURI, SparqlEngine engine ) throws Throwable {
+  public static DatasetAccessibility dereferenceDataset( URI datasetURI ) throws Throwable {
     DatasetAccessibility da = new DatasetAccessibility( datasetURI );
     // fetch the distributions
-    Map<URI, URL> distributions = retrieveDistributions( datasetURI, engine );
+    Map<URI, URL> distributions = retrieveDistributions( datasetURI );
     // check their accessibility
     for ( URI key : distributions.keySet() )
       da.add( new DistributionAccessibility( key, accessibilityOfUrl( distributions.get( key ) ) ) );
@@ -42,23 +41,20 @@ public class Validator {
    * Retrieves the distributions which are contained in the supplied dataset.
    *
    * @param datasetURI Identifier of the DataSet for which we will search the distributions.
-   * @param engine     Connection to the database.
    * @return Map with the URI identifier of the distribution as the keys and the corresponding
    * downloadURL as the value.
    */
-  private static Map<URI, URL> retrieveDistributions( URI datasetURI, SparqlEngine engine ) {
+  private static Map<URI, URL> retrieveDistributions( URI datasetURI ) {
     // fetch distribution_uri <-> distribution_download_url
-    String query = Sparql.query( "" +
-      " @PREFIX " +
-      " SELECT ?distribution ?accessURL " +
-      " FROM $dataset" +
-      " WHERE {" +
-      "  $dataset dcat:distribution ?distribution." +
-      "  ?distribution dcat:accessURL ?accessURL." +
-      " }",
-      "dataset", datasetURI );
-
-    QueryResult sparqlResults = engine.sparqlSelect( query );
+    QueryResult sparqlResults = Db.query( "" +
+        " @PREFIX " +
+        " SELECT ?distribution ?accessURL " +
+        " FROM $dataset" +
+        " WHERE {" +
+        "  $dataset dcat:distribution ?distribution." +
+        "  ?distribution dcat:accessURL ?accessURL." +
+        " }",
+        "dataset", datasetURI );
 
     // translate the results for a nicer interface
     Map<URI, URL> resultMap = new HashMap<URI, URL>();
