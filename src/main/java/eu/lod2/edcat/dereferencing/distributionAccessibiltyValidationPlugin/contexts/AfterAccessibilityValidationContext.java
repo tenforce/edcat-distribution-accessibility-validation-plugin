@@ -1,6 +1,6 @@
 package eu.lod2.edcat.dereferencing.distributionAccessibiltyValidationPlugin.contexts;
 
-import eu.lod2.edcat.utils.CatalogService;
+import eu.lod2.edcat.model.Catalog;
 import org.springframework.http.ResponseEntity;
 
 /**
@@ -11,29 +11,28 @@ import org.springframework.http.ResponseEntity;
  */
 public class AfterAccessibilityValidationContext {
 
-  /**
-   * Simple constructor specifying all accessible values.
-   *
-   * @param catalogService CatalogService for which the accessibility is to be verified.
-   */
-  public AfterAccessibilityValidationContext( CatalogService catalogService, ResponseEntity<Object> response ){
-    this.catalogService = catalogService;
-    this.response = response;
-  }
-
-  /** CatalogService for which the accessibility is to be verified. */
-  private CatalogService catalogService;
+  /** Catalog for which the accessibility is to be verified. */
+  private Catalog catalog;
   /** Response object. */
   private ResponseEntity<Object> response;
 
   /**
-   * Retrieves the catalogService for which we are verifying the accessibility.
+   * Simple constructor specifying all accessible values.
    *
-   * @return CatalogService subject to verification.
+   * @param catalog Catalog for which the accessibility is to be verified.
+   */
+  public AfterAccessibilityValidationContext( Catalog catalog, ResponseEntity<Object> response ){
+    this.catalog = catalog;
+    this.response = response;
+  }
+  /**
+   * Retrieves the catalog for which we are verifying the accessibility.
+   *
+   * @return Catalog subject to verification.
    */
   @SuppressWarnings( "UnusedDeclaration" )
-  public CatalogService getCatalogService(){
-    return catalogService;
+  public Catalog getCatalog(){
+    return catalog;
   }
 
   /**

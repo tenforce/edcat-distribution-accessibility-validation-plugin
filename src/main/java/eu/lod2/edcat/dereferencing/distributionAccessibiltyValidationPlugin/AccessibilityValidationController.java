@@ -4,7 +4,8 @@ import eu.lod2.edcat.dereferencing.distributionAccessibiltyValidationPlugin.cont
 import eu.lod2.edcat.dereferencing.distributionAccessibiltyValidationPlugin.contexts.BeforeAccessibilityValidationContext;
 import eu.lod2.edcat.dereferencing.distributionAccessibiltyValidationPlugin.hooks.AfterAccessibilityValidationHookHandler;
 import eu.lod2.edcat.dereferencing.distributionAccessibiltyValidationPlugin.hooks.BeforeAccessibilityValidationHookHandler;
-import eu.lod2.edcat.utils.CatalogService;
+import eu.lod2.edcat.model.Catalog;
+import eu.lod2.edcat.utils.DcatURI;
 import eu.lod2.hooks.util.HookManager;
 import org.openrdf.model.URI;
 import org.springframework.http.HttpHeaders;
@@ -27,14 +28,14 @@ import java.util.Map;
 public class AccessibilityValidationController {
 
   // GET /datasets/id/validate-accessibility
-  @RequestMapping( value = "datasets/{datasetId}/validate-accessibility", method = RequestMethod.GET, produces = "application/json;charset=UTF-8" )
-  public ResponseEntity<Object> update( @PathVariable String datasetId ) throws Throwable {
-    CatalogService catalogService = CatalogService.getDefaultCatalog( );
-    URI datasetUri = catalogService.generateDatasetUri( datasetId );
+  @RequestMapping( value = DcatURI.DATASET_OBJECT_PATH + "/validate-accessibility", method = RequestMethod.GET, produces = "application/json;charset=UTF-8" )
+  public ResponseEntity<Object> update( @PathVariable String catalogId, @PathVariable String datasetId ) throws Throwable {
+    Catalog catalog = new Catalog(catalogId);
+    URI datasetUri = DcatURI.datasetURI(catalogId,datasetId);
 
     HookManager.callHook( BeforeAccessibilityValidationHookHandler.class,
       "handleBeforeAccessibilityValidation",
-      new BeforeAccessibilityValidationContext( catalogService ) );
+      new BeforeAccessibilityValidationContext(catalog) );
 
     DatasetAccessibility accessibility = Validator.dereferenceDataset( datasetUri );
     Object jsonBody = jsonifyAccessibilities( accessibility );
@@ -42,7 +43,7 @@ public class AccessibilityValidationController {
     ResponseEntity<Object> response = new ResponseEntity<Object>( jsonBody, new HttpHeaders(), HttpStatus.OK );
     HookManager.callHook( AfterAccessibilityValidationHookHandler.class,
       "handleAfterAccessibilityValidation",
-      new AfterAccessibilityValidationContext( catalogService, response ) );
+      new AfterAccessibilityValidationContext(catalog, response ) );
 
     return response;
   }

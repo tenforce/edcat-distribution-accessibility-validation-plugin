@@ -1,6 +1,6 @@
 package eu.lod2.edcat.dereferencing.distributionAccessibiltyValidationPlugin.contexts;
 
-import eu.lod2.edcat.utils.CatalogService;
+import eu.lod2.edcat.model.Catalog;
 
 /**
  * Context for hooks which hook into the {@link eu.lod2.edcat.dereferencing.distributionAccessibiltyValidationPlugin.hooks.AfterAccessibilityValidationHookHandler}
@@ -10,26 +10,26 @@ import eu.lod2.edcat.utils.CatalogService;
  */
 public class BeforeAccessibilityValidationContext {
 
+  /** Catalog for which the accessibility is to be verified. */
+  private Catalog catalog;
+
   /**
    * Simple constructor specifying all accessible values.
    *
-   * @param catalogService CatalogService for which the accessibility is to be verified.
+   * @param catalog Catalog for which the accessibility is to be verified.
    */
-  public BeforeAccessibilityValidationContext( CatalogService catalogService ){
-    this.catalogService = catalogService;
+  public BeforeAccessibilityValidationContext( Catalog catalog ){
+    this.catalog = this.catalog;
   }
 
-  /** CatalogService for which the accessibility is to be verified. */
-  private CatalogService catalogService;
-
   /**
-   * Retrieves the catalogService for which we are verifying the accessibility.
+   * Retrieves the catalog for which we are verifying the accessibility.
    *
-   * @return CatalogService subject to verification.
+   * @return Catalog subject to verification.
    */
   @SuppressWarnings( "UnusedDeclaration" )
-  public CatalogService getCatalogService(){
-    return catalogService;
+  public Catalog getCatalog(){
+    return catalog;
   }
 
 }
